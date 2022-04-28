@@ -96,19 +96,24 @@ contract Spotter {
     }
 
     // --- Update value ---
-    function poke(bytes32 ilk) external {
+    function compute_spot(bytes32 ilk) {
         (bytes32 val, bool has) = ilks[ilk].pip.peek();
         uint256 spot = has ? rdiv(rdiv(mul(uint(val), 10 ** 9), par), ilks[ilk].mat) : 0;
         vat.file(ilk, "spot", spot);
         emit Poke(ilk, val, spot);
     }
 
+    function poke(bytes32 ilk) external {
+        compute_spot(ilk);
+    }
+
     function param_poke(bytes32 ilk) external {
         (bytes32 lr_val, bool has) = ilks[ilk].lrpip.peek();
-        uint256 lr = has ? mul(uint(val), 10 ** 9) : ilks[ilk].mat;
+        uint256 lr = has ? mul(uint(lr_val), 10 ** 9) : ilks[ilk].mat;
         ilks[ilk].mat = lr;
+
         // Recompute spot with new liquidation ratio
-        poke(ilk);
+        compute_spot(ilk);
     }
 
     function cage() external auth {
