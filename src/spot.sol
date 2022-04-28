@@ -96,7 +96,7 @@ contract Spotter {
     }
 
     // --- Update value ---
-    function compute_spot(bytes32 ilk) {
+    function compute_spot(bytes32 ilk) internal {
         (bytes32 val, bool has) = ilks[ilk].pip.peek();
         uint256 spot = has ? rdiv(rdiv(mul(uint(val), 10 ** 9), par), ilks[ilk].mat) : 0;
         vat.file(ilk, "spot", spot);
