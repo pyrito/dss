@@ -27,6 +27,7 @@ interface VatLike {
 
 interface PipLike {
     function peek() external returns (bytes32, bool);
+    function peek_lqdratio() external returns (bytes32, bool);
 }
 
 contract Spotter {
@@ -96,7 +97,7 @@ contract Spotter {
     }
 
     // --- Update value ---
-    function write_spot(bytes32 ilk) internal {
+    function write_spot(bytes32 ilk) private {
         (bytes32 val, bool has) = ilks[ilk].pip.peek();
         uint256 spot = has ? rdiv(rdiv(mul(uint(val), 10 ** 9), par), ilks[ilk].mat) : 0;
         vat.file(ilk, "spot", spot);
