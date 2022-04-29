@@ -109,7 +109,7 @@ contract Spotter {
     }
 
     function param_poke(bytes32 ilk) external {
-        (bytes32 lr_val, bool has) = ilks[ilk].lrpip.peek();
+        (bytes32 lr_val, bool has) = ilks[ilk].lrpip.peek_lqdratio();
         uint256 lr = has ? mul(uint(lr_val), 10 ** 9) : ilks[ilk].mat;
         ilks[ilk].mat = lr;
         // Recompute and write spot with new liquidation ratio
